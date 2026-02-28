@@ -1,0 +1,114 @@
+{
+  "name": "copyright-comment-auto-updater",
+  "displayName": "Copyright Comment Auto-Updater",
+  "description": "Automatically updates copyright year comments on file save and inserts new copyright headers in JS/TS files.",
+  "version": "0.1.0",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Formatters",
+    "Other"
+  ],
+  "keywords": [
+    "copyright",
+    "header",
+    "year",
+    "auto-update",
+    "license",
+    "comment"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "Copyright Auto-Updater",
+      "properties": {
+        "copyrightUpdater.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable or disable automatic copyright year updates on save.",
+          "scope": "resource"
+        },
+        "copyrightUpdater.companyName": {
+          "type": "string",
+          "default": "",
+          "description": "Company name to use in newly inserted copyright headers.",
+          "scope": "resource"
+        },
+        "copyrightUpdater.maxScanLines": {
+          "type": "number",
+          "default": 30,
+          "minimum": 1,
+          "maximum": 200,
+          "description": "Maximum number of lines from the top of the file to scan for a copyright comment.",
+          "scope": "resource"
+        },
+        "copyrightUpdater.autoInsertLanguages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "javascript",
+            "typescript"
+          ],
+          "description": "Language IDs for which a new copyright header is automatically inserted if none exists.",
+          "scope": "resource"
+        },
+        "copyrightUpdater.commentTemplates": {
+          "type": "object",
+          "default": {
+            "javascript": "/* Copyright {year} {company} */",
+            "typescript": "/* Copyright {year} {company} */",
+            "cpp": "/* Copyright {year} {company} */",
+            "matlab": "% Copyright {year} {company}",
+            "xml": "<!-- Copyright {year} {company} -->",
+            "html": "<!-- Copyright {year} {company} -->",
+            "css": "/* Copyright {year} {company} */"
+          },
+          "description": "Map of VS Code language IDs to copyright comment templates. Use {year} and {company} as placeholders.",
+          "scope": "resource"
+        },
+        "copyrightUpdater.testFilePatterns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "**/*test*",
+            "**/*Test*",
+            "**/*spec*",
+            "**/*Spec*"
+          ],
+          "description": "Glob patterns for test files that should be excluded from copyright updates.",
+          "scope": "resource"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "npm run check-types && node esbuild.js",
+    "check-types": "tsc --noEmit",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "vscode:prepublish": "npm run package",
+    "package": "npm run check-types && node esbuild.js --production",
+    "test": "npm run compile && vscode-test",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.6",
+    "@types/node": "^20.11.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-cli": "^0.0.6",
+    "@vscode/test-electron": "^2.3.8",
+    "esbuild": "^0.19.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.3.0"
+  }
+}
